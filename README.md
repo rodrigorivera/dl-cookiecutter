@@ -78,13 +78,13 @@ mlflow_artifact []:
    Using HTTPS:
    
     ``` bash
-    $ cookiecutter https://github.com/rodrigorivera/docker-ml-cookiecutter.git
+    $ cookiecutter https://github.com/rodrigorivera/dl-cookiecutter.git
     ```
     
     or SSH:
     
     ``` bash
-    $ cookiecutter git@github.com:rodrigorivera/docker-ml-cookiecutter.git
+    $ cookiecutter git@github.com:rodrigorivera/dl-cookiecutter.git
     ```
 4. Answer all of the cookiecutter prompts for project name, description, license, etc.
 5. Run the appropriate `make` command from the level of your new project directory.
