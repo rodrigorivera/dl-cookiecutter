@@ -1,9 +1,11 @@
-version: '3'
+version: '2.3'
 services:
 
   jupyter:
     build: 
       context: .
+      args: 
+          IMAGE_DL: "${USER}/dl-dev:gpu"
     runtime: nvidia
     mem_limit: 64g
     ports:
@@ -20,11 +22,14 @@ services:
   mlflow:
     build:
       context: .
+      args: 
+          IMAGE_DL: "${USER}/dl-dev:gpu"
     ports:
       - "0.0.0.0::5000"
     volumes:
        - ../:/mnt
     entrypoint: bash -c "mlflow server -h 0.0.0.0 --backend-store-uri ${MLFLOW_TRACKING_URI} --default-artifact-root ${MLFLOW_ARTIFACT_LOCATION:-'None'} -p 5000 && /bin/bash" 
+    mem_limit: 8g
     stdin_open: true
     container_name: "${USER}_{{ cookiecutter.repo_name }}_mlflow"
     tty: true
@@ -34,9 +39,13 @@ services:
   bash:
     build:
       context: .
+      args: 
+          IMAGE_DL: "${USER}/dl-dev:gpu"
+    runtime: nvidia
     volumes:
        - ../:/mnt
     entrypoint: "/bin/bash" 
+    mem_limit: 64g
     stdin_open: true
     container_name: "${USER}_{{ cookiecutter.repo_name }}_bash"
     tty: true

@@ -32,7 +32,7 @@ ci: ci-black ci-flake8 ci-test ## Check black, flake8, and run unit tests
 init:
 	@echo "Building base images"
 	docker build -t ${IMAGE_BASE} ./docker/base-sys-dl/
-	docker build -t ${IMAGE_DL} ./docker/dl-dev/
+	docker build -t ${IMAGE_DL} --build-arg IMAGE_BASE=${IMAGE_BASE} ./docker/dl-dev/
 
 isort: ## Runs isort to sorts imports
 	docker exec $(CONTAINER_NAME) isort -rc /mnt/{{ cookiecutter.repo_name.replace("-", "_") }}
@@ -45,13 +45,10 @@ lint: isort black ## Lints repo; runs black and isort on all files
 
 dev-start: ## Primary make command for devs, spins up containers
 	@echo "Building new images from compose"
-	if [[ "$(docker images -q ${IMAGE_BASE} 2> /dev/null)" == "" ]]; then
-	make init
-	fi
-	docker-compose -f docker/docker-compose.yml --project-name $(PROJECT) up -d --build
+	docker-compose -f docker/docker-compose.yml --project-name ${USER}/$(PROJECT) up -d --build
 
 dev-stop: ## Spin down active containers
-	docker-compose -f docker/docker-compose.yml --project-name {{ cookiecutter.repo_name }} down
+	docker-compose -f docker/docker-compose.yml --project-name ${USER}/$(PROJECT) down
 
 
 docs: ## Build docs using Sphinx and copy to docs folder (this makes it easy to publish to gh-pages)
