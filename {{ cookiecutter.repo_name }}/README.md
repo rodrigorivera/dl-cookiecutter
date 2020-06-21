@@ -38,6 +38,11 @@ docker-compose version 1.21.0, build 1719ceb
 ## Start Docker Containers
 
 The runtime for {{cookiecutter.project_name}} is inside a Docker container. We have a `make` command to launch the appropriate containers.  To launch the docker containers and begin working on a CPU, run from the root directory of the repository:
+1. Generate the main images
+```bash
+make init
+```
+2. Prepare the corresponding containers
 ```bash
 make dev-start
 ```
@@ -49,9 +54,9 @@ This builds images using the Dockerfile in docker/Dockerfile, and runs container
 You should see three containers running.  For example, on my laptop this looks like the below.  On your machine the container ids and the names of the images and running containers will be different, i.e. they will have your username rather that sdey.  In addition, the local ports will be different as well. That is expected. 
 ```bash
 CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS                       NAMES
-f168e19b8b67        {{cookiecutter.repo_name}}_mlflow            "bash -c 'mlflow ui …"   4 days ago          Up 3 days           127.0.0.1:32770->5000/tcp   {{cookiecutter.repo_name}}_mlflow_<username>
-87f03baf686e        {{cookiecutter.repo_name}}_bash     "/bin/bash"              4 days ago          Up 4 days           127.0.0.1:32768->8501/tcp   {{cookiecutter.repo_name}}_bash_<username>
-d9bd01600486        {{cookiecutter.repo_name}}_jupyter   "bash -c 'cd /mnt &&…"   4 days ago          Up 3 days           127.0.0.1:32769->8888/tcp   {{cookiecutter.repo_name}}_jupyter_<username>
+f168e19b8b67        {{cookiecutter.repo_name}}_mlflow            "bash -c 'mlflow ui …"   4 days ago          Up 3 days           127.0.0.1:32770->5000/tcp   <username>_{{cookiecutter.repo_name}}_mlflow
+87f03baf686e        {{cookiecutter.repo_name}}_bash     "/bin/bash"              4 days ago          Up 4 days           127.0.0.1:32768->8501/tcp   <username>_{{cookiecutter.repo_name}}_bash
+d9bd01600486        {{cookiecutter.repo_name}}_jupyter   "bash -c 'cd /mnt &&…"   4 days ago          Up 3 days           127.0.0.1:32769->8888/tcp   <username>_{{cookiecutter.repo_name}}_jupyter
 ```
 
 We have also provided a simple make command to help you easily stop the containers associated with the project:
