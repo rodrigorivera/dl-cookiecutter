@@ -1,0 +1,15 @@
+
+gin-config
+fire
+patool
+torch
+tqdm
+xlrd
+tensorflow
+scipy
+typing
+Cython
+ipykernel
+geomloss
+POT
+tslearn 

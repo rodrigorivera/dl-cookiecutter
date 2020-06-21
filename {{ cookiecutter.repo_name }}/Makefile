@@ -1,9 +1,11 @@
 .PHONY: help, ci-black, ci-flake8, ci-test, isort, black, docs
 
 PROJECT={{ cookiecutter.repo_name }}
-CONTAINER_NAME="{{ cookiecutter.repo_name }}_bash_${USER}"  ## Ensure this is the same name as in docker-compose.yml file
+CONTAINER_NAME="${USER}_{{ cookiecutter.repo_name }}_bash"  ## Ensure this is the same name as in docker-compose.yml file
 VERSION_FILE:=VERSION
 TAG:=$(shell cat ${VERSION_FILE})
+IMAGE_BASE="${USER}/base-sys-dl:gpu"
+IMAGE_DL="${USER}/dl-dev:gpu"
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -27,6 +29,11 @@ ci-test-interactive:  ## Runs unit tests using pytest, and gives you an interact
 ci: ci-black ci-flake8 ci-test ## Check black, flake8, and run unit tests
 	@echo "CI sucessful"
 
+init:
+	@echo "Building base images"
+	docker build -t ${IMAGE_BASE} ./docker/base-sys-dl/
+	docker build -t ${IMAGE_DL} ./docker/dl-dev/
+
 isort: ## Runs isort to sorts imports
 	docker exec $(CONTAINER_NAME) isort -rc /mnt/{{ cookiecutter.repo_name.replace("-", "_") }}
 
@@ -38,6 +45,9 @@ lint: isort black ## Lints repo; runs black and isort on all files
 
 dev-start: ## Primary make command for devs, spins up containers
 	@echo "Building new images from compose"
+	if [[ "$(docker images -q ${IMAGE_BASE} 2> /dev/null)" == "" ]]; then
+	make init
+	fi
 	docker-compose -f docker/docker-compose.yml --project-name $(PROJECT) up -d --build
 
 dev-stop: ## Spin down active containers

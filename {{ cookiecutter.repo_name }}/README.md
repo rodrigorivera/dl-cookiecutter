@@ -11,7 +11,7 @@
 ## Basics
 Clone the code to your machine using the standard Git clone command. If you have SSH keys setup the command is:
 ```bash
-git clone git@github.com:manifoldai/{{cookiecutter.repo_name}}.git
+git clone git@github.com:rodrigorivera/{{cookiecutter.repo_name}}.git
 ``` 
 
  Important note: **Do not clone your code into Google Drive or DropBox**. There are known issues with MLFlow interacting with the file sync that is happening in the background. Clone to a directory that is not being synced by one of those services. 
@@ -76,6 +76,7 @@ dev-start                      Primary make command for devs, spins up container
 dev-stop                       Spin down active containers
 docs                           Build docs using Sphinx and copy to docs folder (this makes it easy to publish to gh-pages)
 git-tag                        Tag in git, then push tag up to origin
+init                           Creates the base images
 isort                          Runs isort to sorts imports
 lint                           Lints repo; runs black and isort on all files
 ```
