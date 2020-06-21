@@ -11,7 +11,7 @@
 *http://cookiecutter.readthedocs.io/en/latest/readme.html*
 
 
-This cookiecutter is used in conjunction with a base development image available in [Docker Hub](https://hub.docker.com/r/manifoldai/orbyter-ml-dev/) to provide an out-of-the-box ready environment for many Machine Learning project use cases.
+This cookiecutter is used in conjunction with a base development image included in the project to provide an out-of-the-box ready environment for many Machine Learning project use cases.
 After running this cookiecutter and the provided start script a developer will have a local development setup that looks like this: 
 
 ![docker local dev](https://s3-us-west-1.amazonaws.com/manifold-public-no-vpn/torus_local_dev.png)
@@ -27,12 +27,6 @@ By scaffolding your data science projects using this cookiecutter you will get:
 
 There are several downstream benefits for moving to a container-first workflow in terms of model and inference engine deployment/delivery.
 By using containers early in the development cycle you can remove a lot of the configuration management issues that waste developer time and ultimately lower quality of deliverables.
-
-## Why Did We Build This?
-
-We are trying to bridge the gap that exists between data science and dev/operations teams today. We wrote about it here:
-https://medium.com/manifold-ai/torus-a-toolkit-for-docker-first-data-science-bddcb4c97b52
-
 
 # Project Set-up
 
@@ -84,16 +78,21 @@ mlflow_artifact []:
    Using HTTPS:
    
     ``` bash
-    $ cookiecutter https://github.com/manifoldai/docker-ml-cookiecutter.git
+    $ cookiecutter https://github.com/rodrigorivera/docker-ml-cookiecutter.git
     ```
     
     or SSH:
     
     ``` bash
-    $ cookiecutter git@github.com:manifoldai/docker-ml-cookiecutter.git
+    $ cookiecutter git@github.com:rodrigorivera/docker-ml-cookiecutter.git
     ```
 4. Answer all of the cookiecutter prompts for project name, description, license, etc.
-5. Run the appropriate `make` command from the level of your new project directory:
+5. Run the appropriate `make` command from the level of your new project directory.
+   If you are running this for the first time, you should build the base images first:
+    ``` bash
+    $ make init
+    ```
+   To start the container with the project:
     ``` bash
     $ make dev-start
     ```
