@@ -3,7 +3,6 @@
     "project_name": "{{ cookiecutter.repo_name.lower().replace(' ', '_') }}",
     "author_name": "Rodrigo Rivera",
     "description": "My Project Description",
-    "repo_owner": "riverar",
     "open_source_license": ["MIT", "BSD-3-Clause", "No license file"],
     "base_docker_image": "${USER}/dl-dev:gpu",
     "mlflow_uri": "/mnt/experiments",
