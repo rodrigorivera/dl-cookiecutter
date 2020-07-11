@@ -4,7 +4,7 @@
     "author_name": "Rodrigo Rivera",
     "description": "My Project Description",
     "open_source_license": ["MIT", "BSD-3-Clause", "No license file"],
-    "base_docker_image": "\${USER}/dl-dev:gpu",
+    "base_docker_image": "dl-dev:gpu",
     "mlflow_uri": "/mnt/experiments",
     "mlflow_artifact": "",
     "port": "8081",
