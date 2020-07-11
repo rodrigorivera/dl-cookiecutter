@@ -6,7 +6,7 @@
     "open_source_license": ["MIT", "BSD-3-Clause", "No license file"],
     "base_docker_image": "${USER}/dl-dev:gpu",
     "mlflow_uri": "/mnt/experiments",
-    "mlflow_artifact": "[OPTIONAL] the artifact for mlflow",
+    "mlflow_artifact": "",
     "port": "8081",
     "password": "123Notebook",
     "neptune_api_token": "eyJhcGlfYWRkcmVzcyI6Imh0dHBzOi8vdWkubmVwdHVuZS5haSIsImFwaV91cmwiOiJodHRwczovL3VpLm5lcHR1bmUuYWkiLCJhcGlfa2V5IjoiZWQ0MDliMDYtMTU4OS00Nzk4LTgwZWEtYWRmYjgwOTVmMThiIn0=",
