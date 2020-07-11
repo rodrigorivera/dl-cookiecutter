@@ -1,8 +1,13 @@
 .PHONY: help, ci-black, ci-flake8, ci-test, isort, black, docs
 
+include .env
+export $(shell sed 's/=.*//' .env)
+
 CONTAINER_NAME="${USER}_${PROJECT}_bash"  ## Ensure this is the same name as in docker-compose.yml file
 VERSION_FILE:=VERSION
 TAG:=$(shell cat ${VERSION_FILE})
+
+
 
 
 help:
