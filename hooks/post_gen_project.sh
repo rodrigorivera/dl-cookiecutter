@@ -39,7 +39,7 @@ echo "NEPTUNE_USERNAME={{ cookiecutter.neptune_username }}" >> $FILE
 # docker global options
 echo "PROJECT={{ cookiecutter.repo_name.replace("-", "_") }}" >> $FILE
 echo "IMAGE_BASE=\${USER}/base-sys-dl:gpu" >> $FILE
-echo "IMAGE_DL={{ cookiecutter.base_docker_image }}" >> $FILE
+echo "IMAGE_DL=\${USER}/{{ cookiecutter.base_docker_image }}" >> $FILE
 
 # Push scaffolded repo to GitHub
 echo "Making initial commit"
