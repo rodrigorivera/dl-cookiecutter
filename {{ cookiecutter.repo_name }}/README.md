@@ -35,14 +35,25 @@ $ docker-compose --version
 docker-compose version 1.21.0, build 1719ceb
 ```
 
+## Create ENV file
+You can use the provided template and copy it as your .env file. Without the env file, the project will not run.
+```bash
+cp env_template .env
+```
+
 ## Start Docker Containers
 
 The runtime for {{cookiecutter.project_name}} is inside a Docker container. We have a `make` command to launch the appropriate containers.  To launch the docker containers and begin working on a CPU, run from the root directory of the repository:
 1. Generate the main images
 ```bash
-make init
+make build
 ```
 2. Prepare the corresponding containers
+*** With GPU ***
+```bash
+make dev-start gpu=all
+```
+*** With CPU ***
 ```bash
 make dev-start
 ```
@@ -132,31 +143,21 @@ You can read about the configuration file structure [here](configs/README.md). I
 
 Once you have the data in the right place and a configuration file, the next step is to prepare your data for training. We do this by invoking the etl script:  
 ```bash
-python {{cookiecutter.repo_name}}/scripts/etl.py configs/examples/config_example.yml
+make dataset
 ```
-Note that this command should be run inside the bash executor container, not on your local host.  While running this command you will see info logging to the screen that tells you what the code is doing and how it is splitting the data. 
-```bash
->>>> put example output here <<<<
-```
+Note that this command will be run inside the bash executor container, not on your local host.  While running this command you will see info logging to the screen that tells you what the code is doing and how it is splitting the data. 
 
 ## Step 4: Train and Evaluate a Model
 
 The most common script run in this repository is the `evaluate.py` script.  It trains and evaluates a model.  We run this script as follows:  
 ```bash
-python {{cookiecutter.repo_name}}/scripts/evaluate.py configs/examples/config_example.yml
+make evaluate gpu=<gpu-id>
 ```
-By default, this script will retrain a model from scratch, but you can point it do use an already trained model.  We'll cover that later in the README. For now, lets assume that we are training a model from scratch.  When you run the script, you will see output like the following below: 
-```bash
->>>> put example output here <<<<
-```
+By default, this script will retrain a model from scratch, but you can point it do use an already trained model.  
 
 The log shows what loss is being used, the model architecture, and many more things.  All of these things are configurable from the config file.  It's good practice to check that what is being run is what you expect.  A common failure mode is human error in the configuration files leading to you to not run the experiment you expected. 
 
 After training, the code runs a number of evaluation metrics and plots and logs these all to MLFlow. If you go to MLFlow after an evaluate run, you can see all the parameters, metrics, and artifacts logged for that run.  As a best practice, you should only look at the models and figures that are persisted inside MLFlow.  That is the source of truth and our experiment bookkeeping.  During the evaluation phase the logging should look like:
-
-```bash
->>>> put example output here <<<<
-```
 
 ## Step 5: View Run in MLFlow
 
@@ -243,7 +244,4 @@ This is the basic workflow! You can run this locally or on a cloud machine. When
     └── viz                   <- Visualization functions
 ```
 --------
-
-# Developer Workflow
-Continued development in this repo is straightforward.  The scaffolding is meant to be extensible -- you should add your own models, loss functions, feature engineering pipelines, etc. For brevity we are not putting information about the intended development workflow in this README. Look [here](docs/develop.md) for more information about the intended development workflow for this repo. 
 

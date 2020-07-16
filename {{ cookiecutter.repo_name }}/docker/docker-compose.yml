@@ -1,12 +1,10 @@
 version: '2.3'
 services:
-
   jupyter:
     build: 
       context: .
       args: 
           IMAGE_DL: "${IMAGE_DL}"
-    runtime: nvidia
     mem_limit: 64g
     ports:
        - "0.0.0.0:{{ cookiecutter.port }}:8888"
@@ -41,7 +39,6 @@ services:
       context: .
       args: 
           IMAGE_DL: "${IMAGE_DL}"
-    runtime: nvidia
     volumes:
        - ../:/mnt
     entrypoint: "/bin/bash" 
