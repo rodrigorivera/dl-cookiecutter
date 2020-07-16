@@ -6,15 +6,15 @@ services:
       args: 
           IMAGE_DL: "${IMAGE_DL}"
     user: ${CURRENT_UID:?"Please run as follows 'CURRENT_UID=$(id -u):$(id -g) docker-compose up'"}
-    runtime: nvidia
+    runtime: ${RUNTIME}
     mem_limit: 64g
     ports:
        - "0.0.0.0:{{ cookiecutter.port }}:8888"
     volumes:
        - ../:/mnt
     entrypoint: bash -c "cd /mnt && jupyter notebook --no-browser --NotebookApp.token='{{ cookiecutter.password }}' --ip=0.0.0.0 --allow-root && /bin/bash" 
-    stdin_open: true
     container_name: "${CONT}_jupyter"
+    stdin_open: true
     tty: true
     env_file:
       - ../.env 
@@ -31,8 +31,8 @@ services:
        - ../:/mnt
     entrypoint: bash -c "mlflow server -h 0.0.0.0 --backend-store-uri ${MLFLOW_TRACKING_URI} --default-artifact-root ${MLFLOW_ARTIFACT_LOCATION:-'None'} -p 5000 && neptune mlflow --project ${NEPTUNE_USERNAME}/${PROJECT} && /bin/bash" 
     mem_limit: 8g
-    stdin_open: true
     container_name: "${CONT}_mlflow"
+    stdin_open: true
     tty: true
     env_file:
       - ../.env 
@@ -43,13 +43,13 @@ services:
       args: 
           IMAGE_DL: "${IMAGE_DL}"
     user: ${CURRENT_UID:?"Please run as follows 'CURRENT_UID=$(id -u):$(id -g) docker-compose up'"}
-    runtime: nvidia
+    runtime: ${RUNTIME}
     volumes:
        - ../:/mnt
     entrypoint: "/bin/bash" 
     mem_limit: 64g
-    stdin_open: true
     container_name: "${CONT}_bash"
+    stdin_open: true
     tty: true
     env_file:
       - ../.env 

@@ -19,10 +19,6 @@ echo "MLFLOW_ARTIFACT_LOCATION={{ cookiecutter.mlflow_artifact }}" >> $FILE
 # neptune.ml
 echo "NEPTUNE_API_TOKEN={{ cookiecutter.neptune_api_token }}" >> $FILE
 echo "NEPTUNE_USERNAME={{ cookiecutter.neptune_username }}" >> $FILE
-# docker global options
-echo "PROJECT={{ cookiecutter.repo_name.replace("-", "_") }}" >> $FILE
-echo "IMAGE_BASE=\${USER}/base-sys-dl:gpu" >> $FILE
-echo "IMAGE_DL=\${USER}/{{ cookiecutter.base_docker_image }}" >> $FILE
 
 
 FILE=env_template
@@ -36,16 +32,12 @@ echo "MLFLOW_ARTIFACT_LOCATION={{ cookiecutter.mlflow_artifact }}" >> $FILE
 # neptune.ml
 echo "NEPTUNE_API_TOKEN={{ cookiecutter.neptune_api_token }}" >> $FILE
 echo "NEPTUNE_USERNAME={{ cookiecutter.neptune_username }}" >> $FILE
-# docker global options
-echo "PROJECT={{ cookiecutter.repo_name.replace("-", "_") }}" >> $FILE
-echo "IMAGE_BASE=\${USER}/base-sys-dl:gpu" >> $FILE
-echo "IMAGE_DL=\${USER}/{{ cookiecutter.base_docker_image }}" >> $FILE
 
 # Push scaffolded repo to GitHub
 echo "Making initial commit"
 git init
 git add .
 git add *
-git commit -m "First commit. Scaffold repo!"
+git commit -m "First commit with scaffolded repo."
 
-echo "All set! Run 'make dev-start' to spin up your containers."
+echo "All set! Run 'make build' to spin up your containers."
