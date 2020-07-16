@@ -13,14 +13,6 @@ COMPOSE_PARAMETERS := \
 	-f docker/docker-compose.yml \
 	--project-name $(CONT)
 
-DOCK_PARAMS:= \
-	CURRENT_UID=$(id -u):$(id -g) \
-	IMAGE_DL=$(IMAGE_DL) \
-	IMAGE_BASE=$(IMAGE_BASE) \
-	RUNTIME=$(RUNTIME) \
-	PROJECT=$(PROJECT) \
-	CONT=$(CONT)
-
 #DOCKER_PARAMETERS := \
 #	--user $(shell id -u)
 
@@ -31,7 +23,13 @@ else
         RUNTIME:=runc
 endif
 
-
+DOCK_PARAMS:= \
+	CURRENT_UID=$(id -u):$(id -g) \
+	IMAGE_DL=$(IMAGE_DL) \
+	IMAGE_BASE=$(IMAGE_BASE) \
+	RUNTIME=$(RUNTIME) \
+	PROJECT=$(PROJECT) \
+	CONT=$(CONT)
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
