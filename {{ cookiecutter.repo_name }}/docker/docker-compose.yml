@@ -6,6 +6,7 @@ services:
       args: 
           IMAGE_DL: "${IMAGE_DL}"
     user: ${CURRENT_UID:?"Please run as follows 'CURRENT_UID=$(id -u):$(id -g) docker-compose up'"}
+    runtime: nvidia
     mem_limit: 64g
     ports:
        - "0.0.0.0:{{ cookiecutter.port }}:8888"
@@ -42,6 +43,7 @@ services:
       args: 
           IMAGE_DL: "${IMAGE_DL}"
     user: ${CURRENT_UID:?"Please run as follows 'CURRENT_UID=$(id -u):$(id -g) docker-compose up'"}
+    runtime: nvidia
     volumes:
        - ../:/mnt
     entrypoint: "/bin/bash" 
