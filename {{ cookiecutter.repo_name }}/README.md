@@ -49,11 +49,12 @@ The runtime for {{cookiecutter.project_name}} is inside a Docker container. We h
 make build
 ```
 2. Prepare the corresponding containers
-*** With GPU ***
+
+***With GPU***
 ```bash
 make dev-start gpu=all
 ```
-*** With CPU ***
+***With CPU***
 ```bash
 make dev-start
 ```

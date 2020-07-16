@@ -1,16 +1,16 @@
 .PHONY: help, ci-black, ci-flake8, ci-test, isort, black, docs
 
-include .env
-export $(shell sed 's/=.*//' .env)
-
-CONTAINER_NAME="${USER}_${PROJECT}_bash"  ## Ensure this is the same name as in docker-compose.yml file
+PROJECT:="{{ cookiecutter.repo_name.replace("-", "_") }}"
+IMAGE_BASE="${USER}/base-sys-dl:gpu"
+IMAGE_DL="${USER}/{{ cookiecutter.base_docker_image }}"
+CONTAINER_NAME="${USER}_$(PROJECT)_bash"  ## Ensure this is the same name as in docker-compose.yml file
 VERSION_FILE:=VERSION
 TAG:=$(shell cat ${VERSION_FILE})
-VOLUME:=/mnt/${PROJECT}
+VOLUME:=/mnt/$(PROJECT)
 
 COMPOSE_PARAMETERS := \
 	-f docker/docker-compose.yml \
-	--project-name ${USER}_${PROJECT}
+	--project-name ${USER}_$(PROJECT)
 
 DOCKER_PARAMETERS := \
 	--user $(shell id -u)
@@ -44,13 +44,7 @@ ci: ci-black ci-flake8 ci-test ## Check black, flake8, and run unit tests
 
 build:
 	@echo "Building base images"
-	# cp .env from env_template if it doesn't exist
-	if [ -f ".env" ]; then
-		echo "Found .env"
-	else
-		echo "Cannot find .env. Copying from env_template"
-		cp env_template .env
-	fi
+	cp env_template .env
 	docker build -t ${IMAGE_BASE} ./docker/base-sys-dl/
 	docker build -t ${IMAGE_DL} --build-arg IMAGE_BASE=${IMAGE_BASE} ./docker/dl-dev/
 
@@ -75,8 +69,8 @@ dev-start: ## Primary make command for devs, spins up containers
 	@echo "Building new images from compose"
 	docker-compose ${COMPOSE_PARAMETERS} ${DOCKER_PARAMETERS} up -d --build
 
-dev-stop:
-    @echo "Spin down active containers"
+dev-stop: ## Spin down active containers
+    @echo "Shut down all containers"
     docker-compose ${COMPOSE_PARAMETERS} ${DOCKER_PARAMETERS} down
 
 
