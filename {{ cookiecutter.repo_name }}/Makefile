@@ -1,22 +1,23 @@
 .PHONY: help, ci-black, ci-flake8, ci-test, isort, black, docs
 
-PROJECT:="{{ cookiecutter.repo_name.replace("-", "_") }}"
-IMAGE_BASE="${USER}/base-sys-dl:gpu"
-IMAGE_DL="${USER}/{{ cookiecutter.base_docker_image }}"
-CONTAINER_NAME="${USER}_$(PROJECT)_bash"  ## Ensure this is the same name as in docker-compose.yml file
+PROJECT:={{ cookiecutter.repo_name.replace("-", "_") }}
+IMAGE_BASE:=${USER}/base-sys-dl:gpu
+IMAGE_DL:=${USER}/{{ cookiecutter.base_docker_image }}
+CONT:=${USER}_$(PROJECT)
+CONTAINER_NAME="$(CONT)_bash"  ## Ensure this is the same name as in docker-compose.yml file
 VERSION_FILE:=VERSION
 TAG:=$(shell cat ${VERSION_FILE})
 VOLUME:=/mnt/$(PROJECT)
 
 COMPOSE_PARAMETERS := \
 	-f docker/docker-compose.yml \
-	--project-name ${USER}_$(PROJECT)
+	--project-name $(CONT)
 
-DOCKER_PARAMETERS := \
-	--user $(shell id -u)
+#DOCKER_PARAMETERS := \
+#	--user $(shell id -u)
 
 ifdef gpu
-	DOCKER_PARAMETERS += --runtime=nvidia -e NVIDIA_VISIBLE_DEVICES=$(gpu)
+	DOCKER_PARAMETERS += -e NVIDIA_VISIBLE_DEVICES=$(gpu)
 endif
 
 
@@ -42,11 +43,11 @@ ci-test-interactive:  ## Runs unit tests using pytest, and gives you an interact
 ci: ci-black ci-flake8 ci-test ## Check black, flake8, and run unit tests
 	@echo "CI sucessful"
 
-build:
+build: ## Create docker images
 	@echo "Building base images"
 	cp env_template .env
-	docker build -t ${IMAGE_BASE} ./docker/base-sys-dl/
-	docker build -t ${IMAGE_DL} --build-arg IMAGE_BASE=${IMAGE_BASE} ./docker/dl-dev/
+	docker build -t $(IMAGE_BASE) ./docker/base-sys-dl/
+	docker build -t $(IMAGE_DL) --build-arg IMAGE_BASE=$(IMAGE_BASE) ./docker/dl-dev/
 
 isort: ## Runs isort to sorts imports
 	docker exec $(CONTAINER_NAME) isort -rc $(VOLUME)
@@ -57,21 +58,21 @@ black: ## Runs black auto-linter
 lint: isort black ## Lints repo; runs black and isort on all files
 	@echo "Linting complete"
 
-dataset:
+dataset: ## Run ETL to get and process data
 	@echo "Download and build all datasets for experiments"
-	docker exec -it $(CONTAINER_NAME) python {{cookiecutter.repo_name}}/scripts/etl.py configs/config.yml
+	docker exec -it $(CONTAINER_NAME) python $(PROJECT)/scripts/etl.py configs/config.yml
 
-evaluate:
+evaluate: ## Run all experiments
 	@echo "Evaluate the results of the experiments"
-	docker exec -it ${DOCKER_PARAMETERS} $(CONTAINER_NAME) python {{cookiecutter.repo_name}}/scripts/evaluate.py configs/config.yml
+	docker exec -it $(DOCKER_PARAMETERS) $(CONTAINER_NAME) python $(PROJECT)/scripts/evaluate.py configs/config.yml
 
 dev-start: ## Primary make command for devs, spins up containers
 	@echo "Building new images from compose"
-	docker-compose ${COMPOSE_PARAMETERS} ${DOCKER_PARAMETERS} up -d --build
+	CURRENT_UID=$(id -u):$(id -g) CONT=$(CONT) docker-compose $(COMPOSE_PARAMETERS) up -d --build
 
 dev-stop: ## Spin down active containers
 	@echo "Shut down all containers"
-	docker-compose ${COMPOSE_PARAMETERS} ${DOCKER_PARAMETERS} down
+	CURRENT_UID=$(id -u):$(id -g) CONT=$(CONT) docker-compose $(COMPOSE_PARAMETERS) down
 
 docs: ## Build docs using Sphinx and copy to docs folder (this makes it easy to publish to gh-pages)
 	docker exec -e GRANT_SUDO=yes $(CONTAINER_NAME) bash -c "cd docsrc; make html"
