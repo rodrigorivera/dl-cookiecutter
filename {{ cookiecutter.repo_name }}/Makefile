@@ -70,9 +70,8 @@ dev-start: ## Primary make command for devs, spins up containers
 	docker-compose ${COMPOSE_PARAMETERS} ${DOCKER_PARAMETERS} up -d --build
 
 dev-stop: ## Spin down active containers
-    @echo "Shut down all containers"
-    docker-compose ${COMPOSE_PARAMETERS} ${DOCKER_PARAMETERS} down
-
+	@echo "Shut down all containers"
+	docker-compose ${COMPOSE_PARAMETERS} ${DOCKER_PARAMETERS} down
 
 docs: ## Build docs using Sphinx and copy to docs folder (this makes it easy to publish to gh-pages)
 	docker exec -e GRANT_SUDO=yes $(CONTAINER_NAME) bash -c "cd docsrc; make html"
