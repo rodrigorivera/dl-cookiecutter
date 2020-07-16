@@ -13,6 +13,14 @@ COMPOSE_PARAMETERS := \
 	-f docker/docker-compose.yml \
 	--project-name $(CONT)
 
+DOCK_PARAMS:= \
+	CURRENT_UID=$(id -u):$(id -g) \
+	IMAGE_DL=$(IMAGE_DL) \
+	IMAGE_BASE=$(IMAGE_BASE) \
+	RUNTIME=$(RUNTIME) \
+	PROJECT=$(PROJECT) \
+	CONT=$(CONT)
+
 #DOCKER_PARAMETERS := \
 #	--user $(shell id -u)
 
@@ -72,11 +80,11 @@ evaluate: ## Run all experiments
 
 dev-start: ## Primary make command for devs, spins up containers
 	@echo "Building new images from compose"
-	CURRENT_UID=$(id -u):$(id -g) IMAGE_DL=$(IMAGE_DL) IMAGE_BASE=$(IMAGE_BASE) RUNTIME=$(RUNTIME) PROJECT=$(PROJECT) CONT=$(CONT) docker-compose $(COMPOSE_PARAMETERS) up -d --build
+	$(DOCK_PARAMS) docker-compose $(COMPOSE_PARAMETERS) up -d --build
 
 dev-stop: ## Spin down active containers
 	@echo "Shut down all containers"
-	CURRENT_UID=$(id -u):$(id -g) IMAGE_DL=$(IMAGE_DL) IMAGE_BASE=$(IMAGE_BASE) RUNTIME=$(RUNTIME) PROJECT=$(PROJECT) CONT=$(CONT) docker-compose $(COMPOSE_PARAMETERS) down
+	$(DOCK_PARAMS) docker-compose $(COMPOSE_PARAMETERS) down
 
 docs: ## Build docs using Sphinx and copy to docs folder (this makes it easy to publish to gh-pages)
 	docker exec -e GRANT_SUDO=yes $(CONTAINER_NAME) bash -c "cd docsrc; make html"
