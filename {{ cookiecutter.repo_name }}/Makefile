@@ -72,11 +72,11 @@ evaluate: ## Run all experiments
 
 dev-start: ## Primary make command for devs, spins up containers
 	@echo "Building new images from compose"
-	CURRENT_UID=$(id -u):$(id -g) IMAGE_DL=$(IMAGE_DL) IMAGE_BASE=$(IMAGE_BASE) RUNTIME=$(RUNTIME) PROJECT=$(PROJECT) docker-compose $(COMPOSE_PARAMETERS) up -d --build
+	CURRENT_UID=$(id -u):$(id -g) IMAGE_DL=$(IMAGE_DL) IMAGE_BASE=$(IMAGE_BASE) RUNTIME=$(RUNTIME) PROJECT=$(PROJECT) CONT=$(CONT) docker-compose $(COMPOSE_PARAMETERS) up -d --build
 
 dev-stop: ## Spin down active containers
 	@echo "Shut down all containers"
-	CURRENT_UID=$(id -u):$(id -g) IMAGE_DL=$(IMAGE_DL) IMAGE_BASE=$(IMAGE_BASE) RUNTIME=$(RUNTIME) PROJECT=$(PROJECT) docker-compose $(COMPOSE_PARAMETERS) down
+	CURRENT_UID=$(id -u):$(id -g) IMAGE_DL=$(IMAGE_DL) IMAGE_BASE=$(IMAGE_BASE) RUNTIME=$(RUNTIME) PROJECT=$(PROJECT) CONT=$(CONT) docker-compose $(COMPOSE_PARAMETERS) down
 
 docs: ## Build docs using Sphinx and copy to docs folder (this makes it easy to publish to gh-pages)
 	docker exec -e GRANT_SUDO=yes $(CONTAINER_NAME) bash -c "cd docsrc; make html"
